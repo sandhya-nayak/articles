@@ -13,6 +13,14 @@ Prior to Hyperledger Fabric v1.2, this information needed to be statically provi
 
 The service discovery feature, which was made available in the Hyperledger Fabric v1.2, improves upon this approach by ensuring that when an application tries to invoke the chaincode, the peers can compute the network information that they need dynamically without the need to depend on a static network configuration that may or may not have changed since it was provided to the application.
 
+## Service discovery and the endorsement policy:
+
+Once service discovery has been turned on, an endorsement request will be routed to the right peer(s) based on the endorsement policy. If the endorsement policy is set to "Any", the request can be routed to any peer on the network. However, you do have the opportunity to bind the policy directly to a particular organization's peer(s).
+
+The service discovery information provided by the peer supplies two pieces of information - Layouts and EndorsersByGroup. With these two pieces of data, the SDK has the ability to send the request to the peer(s) from different organizations that meet the endorsement policy requirements. 
+
+The Node.js SDK provides default code that uses the Layouts and EndorsersByGroups and sends it to the appropriate peers as per the endorsement policy. This code can be customized if the provided logic does not meet the users needs. You can refer the [Hyperledger Fabric Docs on Service Discovery](https://hyperledger-fabric.readthedocs.io/en/release-1.4/discovery-overview.html#how-service-discovery-works-in-fabric) for more information on the Layouts and EndorsersByGroups.
+
 
 # Using Service Discovery in the IBM Blockchain Platform:
 Note: We will make use of the [fabcar](https://github.com/IBM/fabcar-blockchain-sample) developer pattern to demonstrate how service discovery can be incorporated into a blockchain application. This article assumes you have an IBM ID and have set up the required [IBM Cloud Services](https://github.com/IBM/fabcar-blockchain-sample#3-create-ibm-cloud-services) as described in the fabcar developer pattern.
@@ -44,6 +52,8 @@ With service discovery, applications no longer need to specify which peers they 
 
 Let's have a look at how we can enable and utilize service discovery in the IBM Blockchain Platform using the Fabric Node SDK.
 
+In order to create a transaction and add it to a block on the blockchain, the application needs to connect to the peers that will endorse the transaction and to the ordering service that will order the transaction. The connection endpoints for these peers and the ordering service can be provided to the application in the connection profile which can be used to construct a Fabric Gateway. The Fabric Gateway then conducts interactions with the Fabric Network. You can get more information about [using the connection profile to build a fabric gateway](https://cloud.ibm.com/docs/services/blockchain?topic=blockchain-ibp-console-app#step-four-use-the-connection-profile-to-build-a-fabric-gateway) and connect to a blockchain network in the IBM Blockchain Platform in the IBM Cloud DOcumentation.
+
 In order to use service discovery in your application, you need to use the following code to connect to your gateway:
 ```await gateway.connect(ccp, { wallet, identity: userName, discovery: { "enabled": true, "asLocalhost": false } });```
 
@@ -59,7 +69,7 @@ const network = await gateway.getNetwork('mychannel');
 const contract = network.getContract('fabcar');
 ```
 
-Try setting enabled = false in the config.json. When you try to run the application, you will get an error as service discovery has been disabled and the network information can no longer be obtained.
+Try setting enabled = false in the config.json. When you try to run the application, you will get an error as service discovery has been disabled and the network information can no longer be dynamically obtained.
 
 ```
 2019-10-28T15:42:59.535Z - error: [Network]: _initializeInternalChannel: no suitable peers available to initialize from
@@ -81,8 +91,15 @@ If you create a new organization and add it to the channel, you need not update 
 This ensures that the addition of new peers, as well as the temporary or permanent unavailability of previously added peers does not cause failures in the application as long as at least one reliable anchor peer's information is provided to the application.
 
 
+# Conclusion:
+
+Now, when you use service discovery to submit a transaction for endorsement, the transaction request will automatically be sent to the right peer(s) based on the parameters such as endorsement policies specified within the network.
+
+
 # Related Links
 
 * [Hyperledger Fabric Docs - Service Discovery](https://hyperledger-fabric.readthedocs.io/en/latest/discovery-overview.html)
-* [IBM Cloud Docs - Anchor peers used for Service Discovery](https://cloud.ibm.com/docs/services/blockchain?topic=blockchain-ibp-console-govern#ibp-console-govern-channels-anchor-peers)
+* [Hyperledger Fabric Docs - Fabric Gateway](https://hyperledger-fabric.readthedocs.io/en/release-1.4/developapps/gateway.html)
 * [Hyperledger Fabric Docs - Gossip data dissemination protocol](https://hyperledger-fabric.readthedocs.io/en/release-1.4/gossip.html)
+* [IBM Cloud Docs - Anchor peers used for Service Discovery](https://cloud.ibm.com/docs/services/blockchain?topic=blockchain-ibp-console-govern#ibp-console-govern-channels-anchor-peers)
+* [IBM Cloud Docs - Using the connection profile to build a fabric gateway](https://cloud.ibm.com/docs/services/blockchain?topic=blockchain-ibp-console-app#step-four-use-the-connection-profile-to-build-a-fabric-gateway)
