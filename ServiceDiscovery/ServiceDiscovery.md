@@ -54,7 +54,7 @@ In order to create a transaction and add it to a block on the blockchain, the ap
 In order to use service discovery in your application, you need to use the following code to connect to your gateway:
 ```await gateway.connect(ccp, { wallet, identity: userName, discovery: { "enabled": true, "asLocalhost": false } });```
 
-Here "enabled = true" is what turns on service discovery. Essentially this creates a dynamic gateway.
+Here we are setting the value of "enabled" as `true` which is what turns on service discovery. Essentially this creates a dynamic gateway.
 
 This is exactly what is done in the [network.js](https://github.com/IBM/fabcar-blockchain-sample/blob/master/web-app/server/src/fabric/network.js) script of the fabcar application with the only difference being that the discovery service configuration parameter of enabled is set to true in the config.json, which is then referenced in network.js.
 
@@ -66,7 +66,7 @@ const network = await gateway.getNetwork('mychannel');
 const contract = network.getContract('fabcar');
 ```
 
-Try setting enabled = false in the config.json. When you try to run the application, you will get an error as service discovery has been disabled and the network information can no longer be dynamically obtained.
+Try setting enabled as `false` in the config.json. When you try to run the application, you will get an error as service discovery has been disabled and the network information can no longer be dynamically obtained.
 
 ```
 2019-10-28T15:42:59.535Z - error: [Network]: _initializeInternalChannel: no suitable peers available to initialize from
