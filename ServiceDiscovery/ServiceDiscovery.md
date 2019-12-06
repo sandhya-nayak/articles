@@ -25,7 +25,7 @@ The service discovery feature, which was made available in the Hyperledger Fabri
 * [IBM Blockchain Platform Extension for VSCode](https://marketplace.visualstudio.com/items?itemName=IBMBlockchain.ibm-blockchain-platform)
 
 # Estimated Time:
-We will make use of the [fabcar](https://github.com/IBM/fabcar-blockchain-sample) developer pattern to demonstrate how service discovery can be incorporated into a blockchain application. This article assumes you have an IBM ID and have set up the required [IBM Cloud Services](https://github.com/IBM/fabcar-blockchain-sample#3-create-ibm-cloud-services) as described in the fabcar developer pattern.
+We will make use of the [fabcar](https://github.com/IBM/fabcar-blockchain-sample) developer pattern to demonstrate how service discovery can be incorporated into a blockchain application. This tutorial assumes you have an IBM ID and have set up the required [IBM Cloud Services](https://github.com/IBM/fabcar-blockchain-sample#3-create-ibm-cloud-services) as described in the fabcar developer pattern.
 
 Once the pre-requisites have been installed, it should take you about 45-60 minutes to complete this tutorial (including the time required to follow through the instructions for the fabcar developer pattern).
 
